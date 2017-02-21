@@ -28,7 +28,7 @@ func loadPage(title string) (*Page, error) {
 func main() {
 	http.HandleFunc("/view/", viewHandler)
 	http.HandleFunc("/edit/", editHandler)
-	//http.HandleFunc("/save/", saveHandler)
+	http.HandleFunc("/save/", saveHandler)
 	// p1 := &Page{Title: "TestPage", Body: []byte("This is a sample Page.")}
 	// p1.save()
 	// p2, _ := loadPage("TestPage")
@@ -57,6 +57,13 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 		p = &Page{Title: title}
 	}
 	renderTemplate(w, "edit", p)
+}
+
+func saveHandler(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/save/"):]
+	body := r.FormValue("body")
+	p := &Page{Title: title, Body: []byte(body)}
+	p.Save()
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
